@@ -1,3 +1,18 @@
 Archivo: prueba.cpp
-19/09/2022 09:30:29 a. m.
-Error de sintaxis, se espera un FinSentencia en linea: 7
+20/09/2022 09:44:58 a. m.
+
+pi = 3.141592653589793 = 3.1415927
+
+d = 4 = 4
+
+area = pi radio radio * * = 31415.928
+area 
+d = 10 = 10
+d 20 d 
+variables: 
+area Float 31415.928
+radio Float 100
+pi Float 3.1415927
+resultado Float 0
+a Int 0
+d Int 11

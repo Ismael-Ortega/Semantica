@@ -13,8 +13,6 @@ namespace semantica
 
                 a.Programa();
 
-
-                
                 /*a.match("#");
                 a.match("include");
                 a.match("<");
