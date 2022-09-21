@@ -1,18 +1,5 @@
 Archivo: prueba.cpp
-20/09/2022 09:44:58 a. m.
+21/09/2022 09:59:32 a. m.
 
-pi = 3.141592653589793 = 3.1415927
-
-d = 4 = 4
-
-area = pi radio radio * * = 31415.928
-area 
-d = 10 = 10
-d 20 d 
-variables: 
-area Float 31415.928
-radio Float 100
-pi Float 3.1415927
-resultado Float 0
-a Int 0
-d Int 11
+x = 1.5 1.5 + = 3
+Error de semantica: no podemos asignar un: <Float> a un <Char> en linea  11
