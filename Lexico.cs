@@ -1,3 +1,4 @@
+//Ortega Espinosa Angel Ismael
 using System.IO;
 
 namespace semantica

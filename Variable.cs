@@ -1,3 +1,4 @@
+//Ortega Espinosa Angel Ismael
 namespace semantica
 {
     public class Variable
