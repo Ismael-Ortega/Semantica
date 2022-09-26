@@ -246,6 +246,7 @@ namespace semantica
         }
 
         //Asignacion -> identificador = cadena | Expresion;
+
         private void Asignacion(bool evaluacion)
         {
             string nuevaVariable = getContenido();
