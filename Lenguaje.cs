@@ -7,8 +7,8 @@ using System.Collections.Generic;
 //Requerimiento 3.- Programar un metodo de conversion de un valor a un tipo de dato
 //                  Ej. private float convert(float valor, string tipoDato)
 //                  Deberan usar el residuo de la division %255, *65535
-//Requerimiento 4.- Obtener el valor de la variable cuando se requiera y programar el metodo getValor() LISTO
-//Requerimiento 5.- Modificar el valor de la variable en el scanf LISTO
+//Requerimiento 4.- Evaluar nuevamente la condicion del If - else, While, For, Do while con respecto al parametro que recibe
+//Requerimiento 5.- Levantar una Excepxion en el Scanf cuando la captura no sea un numero
 namespace semantica
 {
     public class Lenguaje : Sintaxis
@@ -152,6 +152,17 @@ namespace semantica
                 Lista_identificadores(tipo);
             }
         }
+
+        //Main      -> void main() Bloque de instrucciones
+        private void Main()
+        {
+            match("void");
+            match("main");
+            match("(");
+            match(")");
+            BloqueInstrucciones(true);
+        }
+
         //Bloque de instrucciones -> {listaIntrucciones?}
         private void BloqueInstrucciones(bool evaluacion)
         {
@@ -174,12 +185,12 @@ namespace semantica
         }
 
         //ListaInstruccionesCase -> Instruccion ListaInstruccionesCase?
-        private void ListaInstruccionesCase()
+        private void ListaInstruccionesCase(bool evaluacion)
         {
-            Instruccion();
+            Instruccion(evaluacion);
             if (getContenido() != "case" && getContenido() !=  "break" && getContenido() != "default" && getContenido() != "}")
             {
-                ListaInstruccionesCase();
+                ListaInstruccionesCase(evaluacion);
             }
         }
 
@@ -285,7 +296,8 @@ namespace semantica
         {
             match("while");
             match("(");
-            Condicion();
+            bool ValidarWhile = Condicion();
+            //Requerimiento 4
             match(")");
             if (getContenido() == "{") 
             {
@@ -311,7 +323,8 @@ namespace semantica
             } 
             match("while");
             match("(");
-            Condicion();
+            //Requerimiento 4
+            bool validarDo = Condicion();
             match(")");
             match(";");
         }
@@ -321,7 +334,8 @@ namespace semantica
             match("for");
             match("(");
             Asignacion(evaluacion);
-            Condicion();
+            //Requerimiento 4
+            bool validarFor = Condicion();
             match(";");
             Incremento(evaluacion);
             match(")");
@@ -430,10 +444,11 @@ namespace semantica
         }
 
         //If -> if(Condicion) bloque de instrucciones (else bloque de instrucciones)?
-        private void If()
+        private void If(bool evaluacion)
         {
             match("if");
             match("(");
+            //Requerimiento 4
             bool validarIf = Condicion();
             match(")");
             if (getContenido() == "{")
@@ -447,6 +462,7 @@ namespace semantica
             if (getContenido() == "else")
             {
                 match("else");
+                //Requerimiento 4
                 if (getContenido() == "{")
                 {
                     BloqueInstrucciones(validarIf);
@@ -495,26 +511,21 @@ namespace semantica
             match(",");
             match("&");
             string variable = getContenido();
-             if (existeVariable(variable) != true){ //Utilizamos la funcion de ExisteVariable, pues regresa true o false
+            if (existeVariable(variable) != true) //Utilizamos la funcion de ExisteVariable, pues regresa true o false
+            {
                 throw new Error("\nLa variable " + variable + " no se ha declarado en la cabecera\n", log);
             }
-            string val = "" + Console.ReadLine();
-            //Hacemos el parseo de val, de string a float, para poder utilizarlo en el metodo modVariable
-            float nuevaVal = float.Parse(val);
-            modVariable(variable, nuevaVal);
+            if (evaluacion)
+            {
+                string val = "" + Console.ReadLine();
+                //Hacemos el parseo de val, de string a float, para poder utilizarlo en el metodo modVariable
+                //Requerimiento 5
+                float nuevaVal = float.Parse(val);
+                modVariable(variable, nuevaVal);
+            }
             match(Tipos.Identificador);
             match(")");
             match(";");
-        }
-
-        //Main      -> void main() Bloque de instrucciones
-        private void Main(bool evaluacion)
-        {
-            match("void");
-            match("main");
-            match("(");
-            match(")");
-            BloqueInstrucciones(evaluacion);
         }
 
         //Expresion -> Termino MasTermino
