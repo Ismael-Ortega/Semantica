@@ -1,14 +1,15 @@
 //Ortega Espinosa Angel Ismael
 using System;
 using System.Collections.Generic;
-//Requerimiento 1.- Actualizar el Dominantepara variables en la expresion 
+//Requerimiento 1.- Actualizar el Domian variables en la expresion 
 //                  Ejemplo: float x; char y; -> y=x (debe dar error pues no coinciden los tipos)
 //Requerimiento 2.- Actualizar el dominante para el casteo (match?) y el valor de la subexpresion
 //Requerimiento 3.- Programar un metodo de conversion de un valor a un tipo de dato
 //                  Ej. private float convert(float valor, string tipoDato)
 //                  Deberan usar el residuo de la division %255, *65535
 //Requerimiento 4.- Evaluar nuevamente la condicion del If - else, While, For, Do while con respecto al parametro que recibe
-//Requerimiento 5.- Levantar una Excepxion en el Scanf cuando la captura no sea un numero
+//Requerimiento 5.- Levantar la excepcion cuando la captura no sea un numero
+//Requerimineto 6.- Ejecutar el For();
 namespace semantica
 {
     public class Lenguaje : Sintaxis
@@ -335,18 +336,27 @@ namespace semantica
             match("(");
             Asignacion(evaluacion);
             //Requerimiento 4
+
+            //Requerimiento 6:
+            //a) Guardar la posicion del archivo de texto
             bool validarFor = Condicion();
-            match(";");
-            Incremento(evaluacion);
-            match(")");
-            if (getContenido() == "{")
-            {
-                BloqueInstrucciones(evaluacion);  
-            }
-            else
-            {
-                Instruccion(evaluacion);
-            }
+            //b) Agregar un ciclo while
+            // while()
+            //{
+                match(";");
+                Incremento(evaluacion);
+                match(")");
+                if (getContenido() == "{")
+                {
+                    BloqueInstrucciones(evaluacion);  
+                }
+                else
+                {
+                    Instruccion(evaluacion);
+                }
+                // c) Regresar a la posicion de lectura del archivo
+                // d) Sacar otro token
+            //}
         }
 
         //Incremento -> Identificador ++ | --
@@ -605,6 +615,10 @@ namespace semantica
                 }
                 log.Write(getContenido() + " " );
                 //Requerimiento 1
+                if (dominante  < getTipo(getContenido()))
+                {
+                    dominante = getTipo(getContenido());
+                }
                 stack.Push(getValor(getContenido()));
                 match(Tipos.Identificador);
             }
