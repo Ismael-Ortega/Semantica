@@ -1,7 +1,7 @@
 //Ortega Espinosa Angel Ismael
 using System;
 using System.Collections.Generic;
-//Requerimiento 1.- Actualizar el Domian variables en la expresion 
+//Requerimiento 1.- Actualizar el Domianante variables en la expresion 
 //                  Ejemplo: float x; char y; -> y=x (debe dar error pues no coinciden los tipos)
 //Requerimiento 2.- Actualizar el dominante para el casteo (match?) y el valor de la subexpresion
 //Requerimiento 3.- Programar un metodo de conversion de un valor a un tipo de dato
