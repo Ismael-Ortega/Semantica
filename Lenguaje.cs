@@ -1,7 +1,7 @@
 //Ortega Espinosa Angel Ismael
 using System;
 using System.Collections.Generic;
-//Requerimiento 1.- Actualizar el Domianante variables en la expresion 
+//Requerimiento 1.- Actualizar el Domianante variables en la expresion LISTO
 //                  Ejemplo: float x; char y; -> y=x (debe dar error pues no coinciden los tipos)
 //Requerimiento 2.- Actualizar el dominante para el casteo (match?) y el valor de la subexpresion
 //Requerimiento 3.- Programar un metodo de conversion de un valor a un tipo de dato
@@ -653,6 +653,7 @@ namespace semantica
                     //Requerimiento 2
                     //Saco un elemento del stack
                     //Convierto ese valor al equivalente en casteo
+                    float valorGuardado = stack.Pop();
                     //Requerimiento 3
                     //Ej. Si el casteo es char y el pop regresa un 256, el valor equivalente en casteo es un 0
                 }

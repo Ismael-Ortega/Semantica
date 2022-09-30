@@ -1,11 +1,5 @@
 Archivo: prueba.cpp
-27/09/2022 09:59:47 a. m.
-3 5 + 10 
-variables: 
-area Float 0
-radio Float 0
-pi Float 0
-resultado Float 0
-x Char 0
-a Int 0
-d Int 0
+29/09/2022 09:17:08 a. m.
+
+x = 2.5 = 2.5
+Error de semantica: no podemos asignar un: <Float> a un <Char> en linea  15
