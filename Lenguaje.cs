@@ -654,8 +654,22 @@ namespace semantica
                     //Saco un elemento del stack
                     //Convierto ese valor al equivalente en casteo
                     float valorGuardado = stack.Pop();
+                    //Obtener el tipoDato de lo obtenido en valorGuardado y compararlo con el casteo
+                    //valorGuardado.TipoDato;
+                    if ((valorGuardado % 1) != 0 && casteo)
+                    {
+                        valorGuardado = Trunc
+                    }
                     //Requerimiento 3
                     //Ej. Si el casteo es char y el pop regresa un 256, el valor equivalente en casteo es un 0
+                    //Programar metodo conversion();
+                    if (valorGuardado == 256){
+                        valorGuardado = 0;
+                        valorGuardado = stack.Push();
+                    } if (valorGuardado > 256){
+                        valorGuardado = valorGuardado - 255;
+                        valorGuardado = stack.Push();
+                    }
                 }
             }
         }
