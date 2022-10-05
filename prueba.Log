@@ -1,5 +1,13 @@
 Archivo: prueba.cpp
-29/09/2022 09:17:08 a. m.
+05/10/2022 09:47:54 a. m.
 
-x = 2.5 = 2.5
-Error de semantica: no podemos asignar un: <Float> a un <Char> en linea  15
+x = 2.5 = 2
+
+variables: 
+area Float 0
+radio Float 0
+pi Float 0
+resultado Float 0
+x Char 2
+a Int 5
+d Int 0
