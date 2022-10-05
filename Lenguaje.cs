@@ -527,11 +527,18 @@ namespace semantica
             }
             if (evaluacion)
             {
-                string val = "" + Console.ReadLine();
-                //Hacemos el parseo de val, de string a float, para poder utilizarlo en el metodo modVariable
-                //Requerimiento 5
-                float nuevaVal = float.Parse(val);
-                modVariable(variable, nuevaVal);
+                if (evaluacion != )
+                {
+                    throw new Error("\nEl valor " + variable + " no se ha declarado en la cabecera\n", log);
+                }
+                else
+                {
+                    string val = "" + Console.ReadLine();
+                    //Hacemos el parseo de val, de string a float, para poder utilizarlo en el metodo modVariable
+                    //Requerimiento 5
+                    float nuevaVal = float.Parse(val);
+                    modVariable(variable, nuevaVal);
+                }
             }
             match(Tipos.Identificador);
             match(")");
@@ -594,6 +601,27 @@ namespace semantica
                 }
             }
         }
+
+    private float Convertir (float valor, Variable.TipoDato dominante){
+        if (valor > 255 && dominante != Variable.TipoDato.Char)
+        {
+            valor = valor % 256;
+            return valor;
+        }
+        else
+        {
+            if (valor > 65535 && dominante != Variable.TipoDato.Int)
+            {
+                valor = valor % 65536;
+                return valor;
+            }
+            else
+            {
+                return valor;
+            } 
+        }
+    }
+
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
@@ -651,24 +679,18 @@ namespace semantica
                 if (huboCasteo)
                 {
                     //Requerimiento 2
-                    //Saco un elemento del stack
-                    //Convierto ese valor al equivalente en casteo
+                    dominante = casteo;
                     float valorGuardado = stack.Pop();
                     //Obtener el tipoDato de lo obtenido en valorGuardado y compararlo con el casteo
-                    //valorGuardado.TipoDato;
-                    if ((valorGuardado % 1) != 0 && casteo)
+                    if ((valorGuardado % 1) != 0 && dominante != Variable.TipoDato.Float)
                     {
-                        valorGuardado = Trunc
+                        valorGuardado = MathF.Truncate(valorGuardado);
                     }
+                    valorGuardado = Convertir(valorGuardado, dominante);
+                    stack.Push(valorGuardado);
                     //Requerimiento 3
                     //Ej. Si el casteo es char y el pop regresa un 256, el valor equivalente en casteo es un 0
-                    //Programar metodo conversion();
-                    if (valorGuardado == 256){
-                        valorGuardado = 0;
-                        valorGuardado = stack.Push();
-                    } if (valorGuardado > 256){
-                        valorGuardado = valorGuardado - 255;
-                        valorGuardado = stack.Push();
+                    //Programar metodo convertir();
                     }
                 }
             }
