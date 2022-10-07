@@ -1,13 +1,21 @@
 Archivo: prueba.cpp
-05/10/2022 09:47:54 a. m.
+06/10/2022 09:59:20 a. m.
 
-x = 2.5 = 2
-
+a = 0 = 0
+a 3 
+d = 0 = 0
+d 3 d 3 d 3 d 3 a 3 
+d = 0 = 0
+d 3 d 3 d 3 d 3 a 3 
+d = 0 = 0
+d 3 d 3 d 3 d 3 a 3 
+d = 0 = 0
+d 3 
 variables: 
 area Float 0
 radio Float 0
 pi Float 0
 resultado Float 0
-x Char 2
-a Int 5
-d Int 0
+x Char 0
+a Int 3
+d Int 3

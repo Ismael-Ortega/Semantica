@@ -9,7 +9,7 @@ using System.Collections.Generic;
 //                  Deberan usar el residuo de la division %255, *65535
 //Requerimiento 4.- Evaluar nuevamente la condicion del If - else, While, For, Do while con respecto al parametro que recibe
 //Requerimiento 5.- Levantar la excepcion cuando la captura no sea un numero
-//Requerimineto 6.- Ejecutar el For();
+//Requerimiento 6.- Ejecutar el For();
 namespace semantica
 {
     public class Lenguaje : Sintaxis
@@ -348,31 +348,47 @@ namespace semantica
             match("for");
             match("(");
             Asignacion(evaluacion);
-            //Requerimiento 4
-
             //Requerimiento 6:
             //a) Guardar la posicion del archivo de texto
-            bool validarFor = Condicion();
-            if (evaluacion == false){
-                validarFor = false;
-            }
-            //b) Agregar un ciclo while
-            // while()
-            //{
-            match(";");
-            Incremento(validarFor);
-            match(")");
-            if (getContenido() == "{")
-            {
-                BloqueInstrucciones(validarFor);
-            }
-            else
-            {
-                Instruccion(validarFor);
-            }
+            //b) Agregar un ciclo do while
+            int posicionAux = posicion;
+            int lineaAux = linea;
+            int tamañoAux = getContenido().Length;
+            bool validarFor;
+            do{
+                validarFor = Condicion();
+                //Requerimiento 4
+                if (evaluacion == false){
+                    validarFor = false;
+                }
+                match(";");
+                Incremento(validarFor);
+                match(")");
+                if (getContenido() == "{")
+                {
+                    BloqueInstrucciones(validarFor);
+                }
+                else
+                {
+                    Instruccion(validarFor);
+                }
+                if (validarFor == true)
+                {
+                    posicion = posicionAux-tamañoAux;
+                    linea = lineaAux;
+                    setPosicion(posicion);
+                    NextToken();
+                }
+            } while (validarFor);
             // c) Regresar a la posicion de lectura del archivo
             // d) Sacar otro token
             //}
+        }
+
+        private void setPosicion(int posicion)
+        {
+            archivo.DiscardBufferedData();
+            archivo.BaseStream.Seek(posicion, SeekOrigin.Begin);
         }
 
         //Incremento -> Identificador ++ | --
