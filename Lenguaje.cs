@@ -305,7 +305,8 @@ namespace semantica
             match("(");
             bool ValidarWhile = Condicion();
             //Requerimiento 4
-            if (evaluacion == false){
+            if (evaluacion == false)
+            {
                 ValidarWhile = false;
             }
             match(")");
@@ -323,7 +324,8 @@ namespace semantica
         private void Do(bool evaluacion)
         {
             bool validarDo = true;
-            if (evaluacion == false){
+            if (evaluacion == false)
+            {
                 validarDo = false;
             }
             match("do");
@@ -355,10 +357,12 @@ namespace semantica
             int lineaAux = linea;
             int tamañoAux = getContenido().Length;
             bool validarFor;
-            do{
+            do
+            {
                 validarFor = Condicion();
                 //Requerimiento 4
-                if (evaluacion == false){
+                if (evaluacion == false)
+                {
                     validarFor = false;
                 }
                 match(";");
@@ -374,7 +378,7 @@ namespace semantica
                 }
                 if (validarFor == true)
                 {
-                    posicion = posicionAux-tamañoAux;
+                    posicion = posicionAux - tamañoAux;
                     linea = lineaAux;
                     setPosicion(posicion);
                     NextToken();
@@ -496,7 +500,8 @@ namespace semantica
             match("(");
             bool validarIf = Condicion();
             //Requerimiento 4
-            if (evaluacion == false){
+            if (evaluacion == false)
+            {
                 validarIf = false;
             }
             match(")");
@@ -560,7 +565,7 @@ namespace semantica
                 float resultado = stack.Pop();
                 if (evaluacion)
                 {
-                    Console.Write(stack.Pop());
+                    Console.Write(resultado);
                 }
             }
             match(")");
@@ -585,14 +590,13 @@ namespace semantica
                 //Requerimiento 5
                 //Hacemos el parseo de val, de string a float, para poder utilizarlo en el metodo modVariable
                 string val = "" + Console.ReadLine();
-                if (val.All(char.IsDigit))
+                if (float.TryParse(val, out float valor))
                 {
-                    float nuevaVal = float.Parse(val);
-                    modVariable(variable, nuevaVal);
+                    modVariable(variable, valor);
                 }
                 else
                 {
-                    throw new Error("\nEl valor ingresado no es un numero", log);                    
+                    throw new Error("\nEl valor ingresado no es un numero\n", log);
                 }
             }
             match(Tipos.Identificador);
@@ -659,22 +663,19 @@ namespace semantica
 
         private float Convertir(float valor, Variable.TipoDato dominante)
         {
-            if (valor > 255 && dominante != Variable.TipoDato.Char)
+            if (dominante == Variable.TipoDato.Char)
             {
-                valor = valor % 256;
+                valor = (char) valor % 256;
+                return valor;
+            }
+            else if (dominante == Variable.TipoDato.Int)
+            {
+                valor = (int) valor % 65536;
                 return valor;
             }
             else
             {
-                if (valor > 65535 && dominante != Variable.TipoDato.Int)
-                {
-                    valor = valor % 65536;
-                    return valor;
-                }
-                else
-                {
-                    return valor;
-                }
+                return valor;
             }
         }
 
@@ -739,10 +740,6 @@ namespace semantica
                     dominante = casteo;
                     float valorGuardado = stack.Pop();
                     //Obtener el tipoDato de lo obtenido en valorGuardado y compararlo con el casteo
-                    if ((valorGuardado % 1) != 0 && dominante != Variable.TipoDato.Float)
-                    {
-                        valorGuardado = (float)MathF.Truncate(valorGuardado);
-                    }
                     valorGuardado = Convertir(valorGuardado, dominante);
                     stack.Push(valorGuardado);
                     //Requerimiento 3
