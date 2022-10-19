@@ -1,15 +1,17 @@
 //Ortega Espinosa Angel Ismael
 using System;
 using System.Collections.Generic;
-//Requerimiento 1.- Actualizar el Domianante variables en la expresion LISTO
-//                  Ejemplo: float x; char y; -> y=x (debe dar error pues no coinciden los tipos)
-//Requerimiento 2.- Actualizar el dominante para el casteo (match?) y el valor de la subexpresion
-//Requerimiento 3.- Programar un metodo de conversion de un valor a un tipo de dato
-//                  Ej. private float convert(float valor, string tipoDato)
-//                  Deberan usar el residuo de la division %255, *65535
-//Requerimiento 4.- Evaluar nuevamente la condicion del If - else, While, For, Do while con respecto al parametro que recibe
-//Requerimiento 5.- Levantar la excepcion cuando la captura no sea un numero
-//Requerimiento 6.- Ejecutar el For();
+//Requerimiento 1.- Actualizacion:  a) Agregar el residuo de la division en el factor
+//                                  b) Agregar en instruccion los incrementos de termino y de factor
+//                                     a++, a--, a+=1, a-=1, a*=1, a/=1, a%=1 (hay que matchear un numero)
+//                                     en donde el 1 puede ser cualquier numero entero o una expresion
+//                                  c) Programar el destructor para ejecutar el metodo cerrarArchivo 
+//                                     Existe una libreria especial para esto, trabajar en Lexico??
+//Requerimiento 2.- Actualizacion, parte 2
+//                                  d) Marcar errores semanticos cuando los incrementos de termino o incrementos de factor
+//                                     Superen el rango de la variable
+//                                  e) Considerar el inciso b) y c) para el for
+//                                  f) Hacer que funcione el do() y el while()
 namespace semantica
 {
     public class Lenguaje : Sintaxis
@@ -26,6 +28,12 @@ namespace semantica
         public Lenguaje(string nombre) : base(nombre)
         {
 
+        }
+
+        ~Lenguaje()
+        {
+            Console.WriteLine("Destructor");
+            cerrar();
         }
 
         private void addVariable(String nombre, Variable.TipoDato tipo)
@@ -274,8 +282,17 @@ namespace semantica
             log.Write(getContenido() + " = ");
             string nombre = getContenido();
             match(Tipos.Identificador);
-            match(Tipos.Asignacion);
             dominante = Variable.TipoDato.Char;
+            if (getClasificacion() == Tipos.IncrementoTermino || getClasificacion() == Tipos.IncrementoFactor)
+            {
+                //Requerimiento 1 b)
+                //Requerimiento 1 c)
+            }
+            else
+            {
+
+            }
+            match(Tipos.Asignacion);
             Expresion();
             match(";");
             float resultado = stack.Pop();
@@ -357,9 +374,10 @@ namespace semantica
             int lineaAux = linea;
             int tamañoAux = getContenido().Length;
             bool validarFor;
+            validarFor = Condicion();
             do
             {
-                validarFor = Condicion();
+                
                 //Requerimiento 4
                 if (evaluacion == false)
                 {
@@ -367,6 +385,7 @@ namespace semantica
                 }
                 match(";");
                 Incremento(validarFor);
+                //Requerimiento 1 d)
                 match(")");
                 if (getContenido() == "{")
                 {
@@ -649,6 +668,7 @@ namespace semantica
                 log.Write(operador + " ");
                 float n1 = stack.Pop();
                 float n2 = stack.Pop();
+                //Requerimiento 1 a)
                 switch (operador)
                 {
                     case "*":
