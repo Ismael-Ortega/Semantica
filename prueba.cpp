@@ -9,12 +9,14 @@ char y; int i ;int j;
 // Este programa calcula el volumen de un cilindro.
 void main(){
 
-    y = 255;
+    y = (3+5)*8-(10-4)/2; //Resultado 61
+
+    /*y = 255;
     y++;
-    y+=2;
+    y+=2;*/
 
     //Requerimiento 5.- Levanta una excepcion en el scanf si la captura no es un numero
-    printf("Introduce la altura de la piramide: ");
+    /*printf("Introduce la altura de la piramide: ");
     scanf("altura", &altura);
     //Requerimiento 6.- Ejecutar el for y for anidado
     if(altura > 4)
@@ -51,5 +53,5 @@ void main(){
     printf("\nValor de variable char y despues del casteo de a: ");
     printf(y);
     printf("\nA continuacion se intenta asignar un int a un char sin usar casteo \n");
-    y = a; //Requerimiento 1.- debe marcar error
+    y = a; //Requerimiento 1.- debe marcar error*/
 }

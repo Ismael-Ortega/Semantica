@@ -67,9 +67,13 @@ namespace semantica
             log.AutoFlush = true;
             asm = new StreamWriter("prueba.asm");
             asm.AutoFlush = true;
-            //log.WriteLine("Primer constructor");
+            
             log.WriteLine("Archivo: prueba.cpp");
-            log.WriteLine(DateTime.Now);//Requerimiento 1:
+            log.WriteLine(DateTime.Now);
+
+            asm.WriteLine(";Archivo: prueba.asm");
+            asm.WriteLine(";Fecha: " + DateTime.Now);
+
             //Investigar como checar si un archivo existe o no existe 
             if (existencia == true)
             {
