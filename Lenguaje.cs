@@ -14,6 +14,7 @@ using System.Collections.Generic;
 //                                  f) Hacer que funcione el do() y el while()
 //Requerimiento 3.-
 //                                  g) Considerar las vaiables y los casteos de las expresiones matematicas en ensamblador
+//                                  h) Considerar el residuo de la division en el ensamblador
 namespace semantica
 {
     public class Lenguaje : Sintaxis
@@ -50,6 +51,16 @@ namespace semantica
             foreach (Variable v in variables)
             {
                 log.WriteLine(v.getNombre() + " " + v.getTipo() + " " + v.getValor());
+            }
+        }
+
+        private void variableASM()
+        {
+            //log.WriteLine();
+            asm.WriteLine(";Variables: ");
+            foreach (Variable v in variables)
+            {
+                asm.WriteLine("\t " + v.getNombre() + "  DW ?");
             }
         }
 
@@ -107,6 +118,7 @@ namespace semantica
             asm.WriteLine("ORG 100H");
             Libreria();
             Variables();
+            variableASM();
             Main();
             displayVariables();
             asm.WriteLine("RET");
@@ -315,6 +327,7 @@ namespace semantica
                 if (evaluacion)
                 {
                     modVariable(nombre, resultado);
+                    asm.WriteLine("MOV " + nombre + ", AX");
                 }
             }
             else
@@ -506,7 +519,7 @@ namespace semantica
             float e2 = stack.Pop();
             asm.WriteLine("POP AX");
             float e1 = stack.Pop();
-            asm.WriteLine("POP DX");
+            asm.WriteLine("POP BX");
             switch (operador)
             {
                 case "==":
@@ -652,9 +665,9 @@ namespace semantica
                 Termino();
                 log.Write(operador + " ");
                 float n1 = stack.Pop();
-                asm.WriteLine("POP AX");
+                asm.WriteLine("POP BX");
                 float n2 = stack.Pop();
-                asm.WriteLine("POP DX");
+                asm.WriteLine("POP AX");
                 switch (operador)
                 {
                     case "+":
@@ -686,9 +699,9 @@ namespace semantica
                 Factor();
                 log.Write(operador + " ");
                 float n1 = stack.Pop();
-                asm.WriteLine("POP AX");
+                asm.WriteLine("POP BX");
                 float n2 = stack.Pop();
-                asm.WriteLine("POP DX");
+                asm.WriteLine("POP AX");
                 //Requerimiento 1 a)
                 switch (operador)
                 {

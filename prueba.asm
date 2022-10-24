@@ -1,40 +1,53 @@
 ;Archivo: prueba.asm
-;Fecha: 20/10/2022 09:57:51 a. m.
+;Fecha: 21/10/2022 11:59:59 a. m.
 #make_COM#
 include 'emu8086.inc'
 ORG 100H
+;Variables: 
+	 area  DW ?
+	 radio  DW ?
+	 pi  DW ?
+	 resultado  DW ?
+	 a  DW ?
+	 d  DW ?
+	 altura  DW ?
+	 x  DW ?
+	 y  DW ?
+	 i  DW ?
+	 j  DW ?
 MOV AX, 3
 PUSH AX
 MOV AX, 5
 PUSH AX
+POP BX
 POP AX
-POP DX
 ADD AX, BX
 PUSH AX
 MOV AX, 8
 PUSH AX
+POP BX
 POP AX
-POP DX
 MUL BX
 PUSH AX
 MOV AX, 10
 PUSH AX
 MOV AX, 4
 PUSH AX
+POP BX
 POP AX
-POP DX
 SUB AX, BX
 PUSH AX
 MOV AX, 2
 PUSH AX
+POP BX
 POP AX
-POP DX
 DIV BX
 PUSH AX
+POP BX
 POP AX
-POP DX
 SUB AX, BX
 PUSH AX
 POP AX
+MOV y, AX
 RET
 END
