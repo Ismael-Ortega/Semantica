@@ -24,13 +24,14 @@ namespace semantica
 
         Variable.TipoDato dominante;
 
+        int cIf;
         public Lenguaje()
         {
-
+            cIf = 0;
         }
         public Lenguaje(string nombre) : base(nombre)
         {
-
+            cIf = 0;
         }
 
         ~Lenguaje()
@@ -60,7 +61,7 @@ namespace semantica
             asm.WriteLine(";Variables: ");
             foreach (Variable v in variables)
             {
-                asm.WriteLine("\t " + v.getNombre() + "  DW ?");
+                asm.WriteLine("\t" + v.getNombre() + "  DW ?");
             }
         }
 
@@ -540,6 +541,7 @@ namespace semantica
         //If -> if(Condicion) bloque de instrucciones (else bloque de instrucciones)?
         private void If(bool evaluacion)
         {
+            string etiquetaIf = "if" + ++cIf;
             match("if");
             match("(");
             bool validarIf = Condicion();
@@ -584,6 +586,7 @@ namespace semantica
                     }
                 }
             }
+            asm.WriteLine(etiquetaIf + ":");
         }
 
         //Printf -> printf(cadena o expresion);
