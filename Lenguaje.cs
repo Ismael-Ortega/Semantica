@@ -328,13 +328,13 @@ namespace semantica
                 if (evaluacion)
                 {
                     modVariable(nombre, resultado);
-                    asm.WriteLine("MOV " + nombre + ", AX");
                 }
             }
             else
             {
                 throw new Error("Error de semantica: no podemos asignar un: <" + dominante + "> a un <" + getTipo(nombre) + "> en linea  " + linea, log);
             }
+            asm.WriteLine("MOV " + nombre + ", AX");
         }
 
         //While -> while(Condicion) bloque de instrucciones | instruccion
@@ -342,8 +342,7 @@ namespace semantica
         {
             match("while");
             match("(");
-            bool ValidarWhile = Condicion();
-            //Requerimiento 4
+            bool ValidarWhile = Condicion("");
             if (evaluacion == false)
             {
                 ValidarWhile = false;
@@ -378,8 +377,7 @@ namespace semantica
             }
             match("while");
             match("(");
-            validarDo = Condicion();
-            //Requerimiento 4
+            validarDo = Condicion("");
             match(")");
             match(";");
         }
@@ -396,11 +394,9 @@ namespace semantica
             int lineaAux = linea;
             int tamañoAux = getContenido().Length;
             bool validarFor;
-            validarFor = Condicion();
+            validarFor = Condicion("");
             do
             {
-                
-                //Requerimiento 4
                 if (evaluacion == false)
                 {
                     validarFor = false;
@@ -511,7 +507,7 @@ namespace semantica
         }
 
         //Condicion -> Expresion operador relacional Expresion
-        private bool Condicion()
+        private bool Condicion(string etiqueta)
         {
             Expresion();
             string operador = getContenido();
@@ -521,19 +517,26 @@ namespace semantica
             asm.WriteLine("POP AX");
             float e1 = stack.Pop();
             asm.WriteLine("POP BX");
+            asm.WriteLine("CMP AX, BX");
             switch (operador)
             {
                 case "==":
+                    asm.WriteLine("JNE " +  etiqueta);
                     return e1 == e2;
                 case ">":
+                    asm.WriteLine("JLE " + etiqueta);
                     return e1 > e2;
                 case ">=":
+                    asm.WriteLine("JL " + etiqueta);
                     return e1 >= e2;
                 case "<":
+                    asm.WriteLine("JGE " + etiqueta);
                     return e1 < e2;
                 case "<=":
+                    asm.WriteLine("JG " + etiqueta);
                     return e1 <= e2;
                 default:
+                    asm.WriteLine("JE " +  etiqueta);
                     return e1 != e2;
             }
         }
@@ -544,8 +547,7 @@ namespace semantica
             string etiquetaIf = "if" + ++cIf;
             match("if");
             match("(");
-            bool validarIf = Condicion();
-            //Requerimiento 4
+            bool validarIf = Condicion(etiquetaIf);
             if (evaluacion == false)
             {
                 validarIf = false;
@@ -562,7 +564,6 @@ namespace semantica
             if (getContenido() == "else")
             {
                 match("else");
-                //Requerimiento 4
                 if (getContenido() == "{")
                 {
                     if (evaluacion == true)
@@ -763,13 +764,14 @@ namespace semantica
                     throw new Error("\nLa variable " + variable + " no se ha declarado en la cabecera\n", log);
                 }
                 log.Write(getContenido() + " ");
-                //Requerimiento 1
                 if (dominante < getTipo(getContenido()))
                 {
                     dominante = getTipo(getContenido());
                 }
                 stack.Push(getValor(getContenido()));
                 match(Tipos.Identificador);
+                //Requerimiento 3 a)
+                //Pasamos al siguiente Token
             }
             else
             {
@@ -799,16 +801,11 @@ namespace semantica
                 match(")");
                 if (huboCasteo)
                 {
-                    //Requerimiento 2
                     dominante = casteo;
                     float valorGuardado = stack.Pop();
                     asm.WriteLine("POP AX");
-                    //Obtener el tipoDato de lo obtenido en valorGuardado y compararlo con el casteo
                     valorGuardado = Convertir(valorGuardado, dominante);
                     stack.Push(valorGuardado);
-                    //Requerimiento 3
-                    //Ej. Si el casteo es char y el pop regresa un 256, el valor equivalente en casteo es un 0
-                    //Programar metodo convertir();
                 }
             }
         }
