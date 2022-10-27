@@ -1,20 +1,28 @@
 //Ortega Espinosa Angel Ismael
 using System;
 using System.Collections.Generic;
-//Requerimiento 1.- Actualizacion:  a) Agregar el residuo de la division en el factor
+//Requerimiento 1.- Actualizacion:
+//                                  a) Agregar el residuo de la division en el factor
 //                                  b) Agregar en instruccion los incrementos de termino y de factor
 //                                     a++, a--, a+=1, a-=1, a*=1, a/=1, a%=1 (hay que matchear un numero)
 //                                     en donde el 1 puede ser cualquier numero entero o una expresion
 //                                  c) Programar el destructor para ejecutar el metodo cerrarArchivo 
 //                                     Existe una libreria especial para esto, trabajar en Lexico??
 //Requerimiento 2.- Actualizacion, parte 2
-//                                  d) Marcar errores semanticos cuando los incrementos de termino o incrementos de factor
+//                                  a) Marcar errores semanticos cuando los incrementos de termino o incrementos de factor
 //                                     Superen el rango de la variable
-//                                  e) Considerar el inciso b) y c) para el for
-//                                  f) Hacer que funcione el do() y el while()
+//                                  b) Considerar el inciso b) y c) para el for
+//                                  c) Hacer que funcione el do() y el while()
 //Requerimiento 3.-
-//                                  g) Considerar las vaiables y los casteos de las expresiones matematicas en ensamblador
-//                                  h) Considerar el residuo de la division en el ensamblador
+//                                  a) Considerar las vaiables y los casteos de las expresiones matematicas en ensamblador
+//                                  b) Considerar el residuo de la division en el ensamblador
+//                                  c) Programar el Printf y el Scanf en ensamblador
+//Requerimiento 4.-                 
+//                                  a)  Programar el else en ensamblador
+//                                  b) Programar el for en ensamblador
+//Requerimiento 5.-                 
+//                                  a) Programar el while en ensamblador
+//                                  b) Programar el do() while en ensamblador
 namespace semantica
 {
     public class Lenguaje : Sintaxis
@@ -24,14 +32,14 @@ namespace semantica
 
         Variable.TipoDato dominante;
 
-        int cIf;
+        int cIf, cFor;
         public Lenguaje()
         {
-            cIf = 0;
+            cIf = cFor = 0;
         }
         public Lenguaje(string nombre) : base(nombre)
         {
-            cIf = 0;
+            cIf = cFor = 0;
         }
 
         ~Lenguaje()
@@ -310,31 +318,30 @@ namespace semantica
             }
             else
             {
-
-            }
-            match(Tipos.Asignacion);
-            Expresion();
-            match(";");
-            float resultado = stack.Pop();
-            asm.WriteLine("POP AX");
-            log.Write("= " + resultado);
-            log.WriteLine();
-            if (dominante < evaluaNumero(resultado))
-            {
-                dominante = evaluaNumero(resultado);
-            }
-            if (dominante <= getTipo(nombre))
-            {
-                if (evaluacion)
+                match(Tipos.Asignacion);
+                Expresion();
+                match(";");
+                float resultado = stack.Pop();
+                asm.WriteLine("POP AX");
+                log.Write("= " + resultado);
+                log.WriteLine();
+                if (dominante < evaluaNumero(resultado))
                 {
-                    modVariable(nombre, resultado);
+                    dominante = evaluaNumero(resultado);
                 }
+                if (dominante <= getTipo(nombre))
+                {
+                    if (evaluacion)
+                    {
+                        modVariable(nombre, resultado);
+                    }
+                }
+                else
+                {
+                    throw new Error("Error de semantica: no podemos asignar un: <" + dominante + "> a un <" + getTipo(nombre) + "> en linea  " + linea, log);
+                }
+                asm.WriteLine("MOV " + nombre + ", AX");
             }
-            else
-            {
-                throw new Error("Error de semantica: no podemos asignar un: <" + dominante + "> a un <" + getTipo(nombre) + "> en linea  " + linea, log);
-            }
-            asm.WriteLine("MOV " + nombre + ", AX");
         }
 
         //While -> while(Condicion) bloque de instrucciones | instruccion
@@ -384,6 +391,9 @@ namespace semantica
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Intruccion 
         private void For(bool evaluacion)
         {
+            string etiquetaInicioFor = "inicioFor" + cFor;
+            string etiquetaFinFor = "finFor" + ++cFor;
+            asm.WriteLine(etiquetaInicioFor + ":");
             match("for");
             match("(");
             Asignacion(evaluacion);
@@ -423,7 +433,7 @@ namespace semantica
             } while (validarFor);
             // c) Regresar a la posicion de lectura del archivo
             // d) Sacar otro token
-            //}
+            asm.WriteLine(etiquetaFinFor + ":");
         }
 
         private void setPosicion(int posicion)
@@ -521,7 +531,7 @@ namespace semantica
             switch (operador)
             {
                 case "==":
-                    asm.WriteLine("JNE " +  etiqueta);
+                    asm.WriteLine("JNE " + etiqueta);
                     return e1 == e2;
                 case ">":
                     asm.WriteLine("JLE " + etiqueta);
@@ -536,7 +546,7 @@ namespace semantica
                     asm.WriteLine("JG " + etiqueta);
                     return e1 <= e2;
                 default:
-                    asm.WriteLine("JE " +  etiqueta);
+                    asm.WriteLine("JE " + etiqueta);
                     return e1 != e2;
             }
         }
@@ -727,12 +737,12 @@ namespace semantica
         {
             if (dominante == Variable.TipoDato.Char)
             {
-                valor = (char) valor % 256;
+                valor = (char)valor % 256;
                 return valor;
             }
             else if (dominante == Variable.TipoDato.Int)
             {
-                valor = (int) valor % 65536;
+                valor = (int)valor % 65536;
                 return valor;
             }
             else

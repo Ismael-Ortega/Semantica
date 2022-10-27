@@ -3,15 +3,23 @@
 #include <stdio.h>
 #include <conio.h>
 float area, radio, pi, resultado;
-int a, d, altura;
+int a, d, altura, k, l;
 float x;
 char y; int i ;int j;
 // Este programa calcula el volumen de un cilindro.
 void main(){
-
-    //y = (3+5)*8-(10-4)/2; //Resultado 61
-    y = 61;
-    if (60 == 61){
-        x = 10;
-    }
+for (i = 0; i < 1; i++)
+{
+    /*for (j = 0; j < 1; j++)
+    {
+        x = x + 1;
+        for (k = 0; k < 1; k++)
+        {
+            for (l = 0; l < 1; l++)
+            {
+                y = y + 2;
+            }
+        }
+    } */  
+}
 }
