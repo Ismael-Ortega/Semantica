@@ -1,5 +1,5 @@
 ;Archivo: prueba.asm
-;Fecha: 26/10/2022 10:03:48 a. m.
+;Fecha: 28/10/2022 09:36:41 a. m.
 #make_COM#
 include 'emu8086.inc'
 ORG 100H
@@ -17,14 +17,8 @@ ORG 100H
 	y  DW ?
 	i  DW ?
 	j  DW ?
-inicioFor0:
-MOV AX, 0
-PUSH AX
-POP AX
-MOV i, AX
-MOV AX, 1
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE 
+PRINTN "Introduzca el radio del cilindro: "
+CALL SCAN_NUM
+MOV radio, CX
+RET
+DEFINE_SCAN_NUM

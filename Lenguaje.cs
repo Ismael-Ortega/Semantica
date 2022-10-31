@@ -131,7 +131,8 @@ namespace semantica
             Main();
             displayVariables();
             asm.WriteLine("RET");
-            asm.WriteLine("END");
+            asm.WriteLine("DEFINE_SCAN_NUM");
+            //asm.WriteLine("END");
         }
 
         //Librerias -> #include<identificador(.h)?> Librerias?
@@ -615,6 +616,7 @@ namespace semantica
                 {
                     Console.Write(getContenido());
                 }
+                asm.WriteLine("PRINTN \"" + getContenido() + "\"");
                 match(Tipos.Cadena);
             }
             else
@@ -625,6 +627,7 @@ namespace semantica
                 if (evaluacion)
                 {
                     Console.Write(resultado);
+                    //Requerimiento, codigo para imprimir una variable
                 }
             }
             match(")");
@@ -657,6 +660,8 @@ namespace semantica
                 {
                     throw new Error("\nEl valor ingresado no es un numero\n", log);
                 }
+                asm.WriteLine("CALL SCAN_NUM");
+                asm.WriteLine("MOV " + variable + ", CX");
             }
             match(Tipos.Identificador);
             match(")");
