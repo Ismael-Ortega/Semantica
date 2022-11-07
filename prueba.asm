@@ -1,5 +1,5 @@
 ;Archivo: prueba.asm
-;Fecha: 07/11/2022 09:58:04 a. m.
+;Fecha: 07/11/2022 01:46:25 p. m.
 #make_COM#
 include 'emu8086.inc'
 ORG 100H
@@ -17,21 +17,10 @@ ORG 100H
 	i  DW ?
 	j  DW ?
 	k  DW ?
-PRINTN "Introduce la altura de la piramide: "
-CALL SCAN_NUM
-MOV altura, CX
+	ab  DW ?
+MOV AX, 200
+PUSH AX
+POP AX
+MOV ab, AX
 MOV AX, 2
 PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JLE if1
-inicioFor0:
-POP AX
-MOV i, AX
-MOV AX, 0
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JLE 

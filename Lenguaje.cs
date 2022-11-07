@@ -3,29 +3,29 @@ using System;
 using System.Collections.Generic;
 //Requerimiento 1.- Actualizacion:
 //                                  a) Agregar el residuo de la division en el factor LISTO
-//                                  b) Agregar en instruccion los incrementos de termino y de factor LISTO?
+//                                  b) Agregar en instruccion los incrementos de termino y de factor LISTO
 //                                     a++, a--, a+=1, a-=1, a*=1, a/=1, a%=1 (hay que matchear un numero)
 //                                     en donde el 1 puede ser cualquier numero entero o una expresion
 //                                  c) Programar el destructor para ejecutar el metodo cerrarArchivo 
-//                                     Existe una libreria especial para esto, trabajar en Lexico??
+//                                     Existe una libreria especial para esto, trabajar en Lexico?? LISTO
 //Requerimiento 2.- Actualizacion, parte 2
 //                                  a) Marcar errores semanticos cuando los incrementos de termino o incrementos de factor
-//                                     Superen el rango de la variable
-//                                  b) Considerar el inciso b) y c) para el for
+//                                     Superen el rango de la variable LISTO
+//                                  b) Considerar el inciso b) y c) para el for LISTO
 //                                  c) Hacer que funcione el do() y el while()
 //Requerimiento 3.-
 //                                  a) Considerar las variables y los casteos de las expresiones matematicas en ensamblador
 //                                  b) Considerar el residuo de la division en el ensamblador
 //                                  c) Programar el Printf y el Scanf en ensamblador
 //Requerimiento 4.-                 
-//                                  a)  Programar el else en ensamblador
+//                                  a) Programar el else en ensamblador
 //                                  b) Programar el for en ensamblador
 //Requerimiento 5.-                 
 //                                  a) Programar el while en ensamblador
 //                                  b) Programar el do() while en ensamblador
 namespace semantica
 {
-    public class Lenguaje : Sintaxis
+    public class Lenguaje : Sintaxis, IDisposable
     {
         List<Variable> variables = new List<Variable>();
         Stack<float> stack = new Stack<float>();
@@ -41,8 +41,8 @@ namespace semantica
         {
             cIf = cFor = 0;
         }
-
-        ~Lenguaje()
+        //Requerimiento 1 a) Creacion de Destructor
+        public void Dispose()
         {
             Console.WriteLine("Destructor");
             cerrar();
@@ -132,7 +132,7 @@ namespace semantica
             displayVariables();
             asm.WriteLine("RET");
             asm.WriteLine("DEFINE_SCAN_NUM");
-            //asm.WriteLine("END");
+            asm.WriteLine("END");
         }
 
         //Librerias -> #include<identificador(.h)?> Librerias?
@@ -315,7 +315,10 @@ namespace semantica
             if (getClasificacion() == Tipos.IncrementoTermino || getClasificacion() == Tipos.IncrementoFactor)
             {
                 //Requerimiento 1 b)
+                modVariable(nombre, Incremento(evaluacion, nombre));
+                match(";");
                 //Requerimiento 1 c)
+                //El destructor se programo en la parte de arriba
             }
             else
             {
@@ -392,6 +395,8 @@ namespace semantica
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Intruccion 
         private void For(bool evaluacion)
         {
+
+            float resIncremento = 0;
             string etiquetaInicioFor = "inicioFor" + cFor;
             string etiquetaFinFor = "finFor" + ++cFor;
             asm.WriteLine(etiquetaInicioFor + ":");
@@ -401,17 +406,20 @@ namespace semantica
             int posicionAux = posicion;
             int lineaAux = linea;
             int tamañoAux = getContenido().Length;
+            string contenidoAux = getContenido();
             bool validarFor;
-            validarFor = Condicion("");
             do
             {
+                validarFor = Condicion("");
                 if (evaluacion == false)
                 {
                     validarFor = false;
                 }
                 match(";");
-                Incremento(validarFor);
                 //Requerimiento 2 a)
+                //Realizar un switch case para validar si supera el rango permitido de int, float, char?
+                match(Tipos.Identificador);
+                resIncremento = Incremento(validarFor, contenidoAux);
                 match(")");
                 if (getContenido() == "{")
                 {
@@ -423,14 +431,13 @@ namespace semantica
                 }
                 if (validarFor == true)
                 {
+                    modVariable(contenidoAux, resIncremento);
                     posicion = posicionAux - tamañoAux;
                     linea = lineaAux;
                     setPosicion(posicion);
                     NextToken();
                 }
             } while (validarFor);
-            // c) Regresar a la posicion de lectura del archivo
-            // d) Sacar otro token
             asm.WriteLine(etiquetaFinFor + ":");
         }
 
@@ -441,84 +448,101 @@ namespace semantica
         }
 
         //Incremento -> Identificador ++ | --
-        private void Incremento(bool evaluacion)
+        private float Incremento(bool evaluacion, string variable)
         {
-            string variable = getContenido();
+            float varMod = getValor(variable);
+            float resultado = 0;
             if (existeVariable(variable) != true)
-            { //Utilizamos la funcion de ExisteVariable, pues regresa true o false
+            {
                 throw new Error("\nLa variable " + variable + " no se ha declarado en la cabecera\n", log);
             }
-            match(Tipos.Identificador);
+            //match(Tipos.Identificador);
+            //Requerimiento 1 b) Programar casos de ++, --, +=, -=, *=, /=
             //Tenemos que realizar un match de los operadores y variables
-            switch (variable){
+            switch (getContenido())
+            {
                 case "++":
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) + 1);
+                        varMod++;
                         asm.WriteLine("INC " + variable);
                     }
+                    match("++");
                     break;
                 case "--":
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) - 1);
+                        varMod--;
                         asm.WriteLine("DEC " + variable);
                     }
+                    match("--");
                     break;
                 case "+=":  //Revisar salida de datos, para que se imprima el resultado sobre si mismo
+                    match("+=");
+                    Expresion();
+                    resultado = stack.Pop();
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) + 1);
-                        asm.WriteLine("INC " + variable);
+                        varMod += resultado;
+                        //asm.WriteLine("INC " + variable);
                     }
                     break;
                 case "-=":
+                    match("-=");
+                    Expresion();
+                    resultado = stack.Pop();
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) - 1);
-                        asm.WriteLine("DEC " + variable);
+                        varMod -= resultado;
+                        //asm.WriteLine("INC " + variable);
                     }
                     break;
                 case "*=":
+                    match("*=");
+                    Expresion();
+                    resultado = stack.Pop();
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) * getValor(variable));
-                        asm.WriteLine("MUL " + variable);
+                        varMod *= resultado;
+                        //asm.WriteLine("INC " + variable);
                     }
                     break;
                 case "/=":
+                    match("/=");
+                    Expresion();
+                    resultado = stack.Pop();
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) / getValor(variable));
-                        asm.WriteLine("DIV " + variable);
+                        varMod /= resultado;
+                        //asm.WriteLine("INC " + variable);
                     }
                     break;
                 case "%=":
+                    match("%=");
+                    Expresion();
+                    resultado = stack.Pop();
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) % getValor(variable));
-                        asm.WriteLine("MOD " + variable);
+                        varMod %= resultado;
+                        //asm.WriteLine("INC " + variable);
                     }
                     break;
                 default:
-                    throw new Error("Error de sintaxis en linea " + linea, log);
+                    throw new Error("Error de sintaxis: Se espera un incremento en linea " + linea, log);
             }
-            /*if (getContenido() == "++")
+            if (getTipo(variable) < dominante)
             {
-                if (evaluacion)
-                {
-                    modVariable(variable, getValor(variable) + 1);
-                }
-                match("++");
+                throw new Error("Error de sintaxis: No se puede asignar un " + dominante + " a un " + getTipo(variable) + " en linea " + linea, log);
             }
-            else
+            if (getTipo(variable) == Variable.TipoDato.Char && varMod > 255)
             {
-                if (evaluacion)
-                {
-                    modVariable(variable, getValor(variable) - 1);
-                }
-                match("--");
-            }*/
+                throw new Error("Error de semantica: el valor sobrepasa el limite en linea  " + linea, log);
+            }
+            else if (getTipo(variable) == Variable.TipoDato.Int && varMod > 65535)
+            {
+                throw new Error("Error de semantica: el valor sobrepasa el limite en linea  " + linea, log);
+            }
+            return varMod;
         }
 
         //Switch -> switch (Expresion) {Lista de casos} | (default: )
@@ -659,7 +683,6 @@ namespace semantica
             match("(");
             if (getClasificacion() == Tipos.Cadena)
             {
-                //Se validan para cada una de los casos requeridos, se utiliza una \ para los metacaracteres especificados
                 setContenido(getContenido().Replace("\"", ""));
                 setContenido(getContenido().Replace("\\n", "\n"));
                 setContenido(getContenido().Replace("\\t", "     "));
@@ -700,8 +723,6 @@ namespace semantica
             }
             if (evaluacion)
             {
-                //Requerimiento 5
-                //Hacemos el parseo de val, de string a float, para poder utilizarlo en el metodo modVariable
                 string val = "" + Console.ReadLine();
                 if (float.TryParse(val, out float valor))
                 {
@@ -785,6 +806,7 @@ namespace semantica
                         asm.WriteLine("DIV BX");
                         asm.WriteLine("PUSH AX");
                         break;
+                    //Requerimiento 1 a) Programar caso de residuo de factor
                     case "%":
                         stack.Push(n2 % n1);
                         asm.WriteLine("DIV BX");

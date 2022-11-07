@@ -1,5 +1,6 @@
 Archivo: prueba.cpp
-07/11/2022 09:58:04 a. m.
-altura 2 
-i = altura = 5
-i 0 Error de sintaxis en linea 16
+07/11/2022 01:46:25 p. m.
+
+ab = 200 = 200
+
+ab = 2 Error de semantica: el valor sobrepasa el limite en linea  12
