@@ -1,5 +1,5 @@
 ;Archivo: prueba.asm
-;Fecha: 28/10/2022 09:36:41 a. m.
+;Fecha: 07/11/2022 09:58:04 a. m.
 #make_COM#
 include 'emu8086.inc'
 ORG 100H
@@ -11,14 +11,27 @@ ORG 100H
 	a  DW ?
 	d  DW ?
 	altura  DW ?
-	k  DW ?
-	l  DW ?
+	cinco  DW ?
 	x  DW ?
 	y  DW ?
 	i  DW ?
 	j  DW ?
-PRINTN "Introduzca el radio del cilindro: "
+	k  DW ?
+PRINTN "Introduce la altura de la piramide: "
 CALL SCAN_NUM
-MOV radio, CX
-RET
-DEFINE_SCAN_NUM
+MOV altura, CX
+MOV AX, 2
+PUSH AX
+POP AX
+POP BX
+CMP AX, BX
+JLE if1
+inicioFor0:
+POP AX
+MOV i, AX
+MOV AX, 0
+PUSH AX
+POP AX
+POP BX
+CMP AX, BX
+JLE 

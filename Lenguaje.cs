@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 //Requerimiento 1.- Actualizacion:
-//                                  a) Agregar el residuo de la division en el factor
-//                                  b) Agregar en instruccion los incrementos de termino y de factor
+//                                  a) Agregar el residuo de la division en el factor LISTO
+//                                  b) Agregar en instruccion los incrementos de termino y de factor LISTO?
 //                                     a++, a--, a+=1, a-=1, a*=1, a/=1, a%=1 (hay que matchear un numero)
 //                                     en donde el 1 puede ser cualquier numero entero o una expresion
 //                                  c) Programar el destructor para ejecutar el metodo cerrarArchivo 
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 //                                  b) Considerar el inciso b) y c) para el for
 //                                  c) Hacer que funcione el do() y el while()
 //Requerimiento 3.-
-//                                  a) Considerar las vaiables y los casteos de las expresiones matematicas en ensamblador
+//                                  a) Considerar las variables y los casteos de las expresiones matematicas en ensamblador
 //                                  b) Considerar el residuo de la division en el ensamblador
 //                                  c) Programar el Printf y el Scanf en ensamblador
 //Requerimiento 4.-                 
@@ -398,9 +398,6 @@ namespace semantica
             match("for");
             match("(");
             Asignacion(evaluacion);
-            //Requerimiento 6:
-            //a) Guardar la posicion del archivo de texto
-            //b) Agregar un ciclo do while
             int posicionAux = posicion;
             int lineaAux = linea;
             int tamañoAux = getContenido().Length;
@@ -414,7 +411,7 @@ namespace semantica
                 }
                 match(";");
                 Incremento(validarFor);
-                //Requerimiento 1 d)
+                //Requerimiento 2 a)
                 match(")");
                 if (getContenido() == "{")
                 {
@@ -452,7 +449,61 @@ namespace semantica
                 throw new Error("\nLa variable " + variable + " no se ha declarado en la cabecera\n", log);
             }
             match(Tipos.Identificador);
-            if (getContenido() == "++")
+            //Tenemos que realizar un match de los operadores y variables
+            switch (variable){
+                case "++":
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) + 1);
+                        asm.WriteLine("INC " + variable);
+                    }
+                    break;
+                case "--":
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) - 1);
+                        asm.WriteLine("DEC " + variable);
+                    }
+                    break;
+                case "+=":  //Revisar salida de datos, para que se imprima el resultado sobre si mismo
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) + 1);
+                        asm.WriteLine("INC " + variable);
+                    }
+                    break;
+                case "-=":
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) - 1);
+                        asm.WriteLine("DEC " + variable);
+                    }
+                    break;
+                case "*=":
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) * getValor(variable));
+                        asm.WriteLine("MUL " + variable);
+                    }
+                    break;
+                case "/=":
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) / getValor(variable));
+                        asm.WriteLine("DIV " + variable);
+                    }
+                    break;
+                case "%=":
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) % getValor(variable));
+                        asm.WriteLine("MOD " + variable);
+                    }
+                    break;
+                default:
+                    throw new Error("Error de sintaxis en linea " + linea, log);
+            }
+            /*if (getContenido() == "++")
             {
                 if (evaluacion)
                 {
@@ -467,7 +518,7 @@ namespace semantica
                     modVariable(variable, getValor(variable) - 1);
                 }
                 match("--");
-            }
+            }*/
         }
 
         //Switch -> switch (Expresion) {Lista de casos} | (default: )
@@ -721,7 +772,7 @@ namespace semantica
                 asm.WriteLine("POP BX");
                 float n2 = stack.Pop();
                 asm.WriteLine("POP AX");
-                //Requerimiento 1 a)
+                //Requerimiento 1 a) LISTO
                 switch (operador)
                 {
                     case "*":
@@ -733,6 +784,11 @@ namespace semantica
                         stack.Push(n2 / n1);
                         asm.WriteLine("DIV BX");
                         asm.WriteLine("PUSH AX");
+                        break;
+                    case "%":
+                        stack.Push(n2 % n1);
+                        asm.WriteLine("DIV BX");
+                        asm.WriteLine("PUSH DX");
                         break;
                 }
             }
