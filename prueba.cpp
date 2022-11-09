@@ -9,7 +9,17 @@ char ab;
 // Este programa calcula el volumen de un cilindro.
 void main(){
 
-    ab = 200; ab*=2;
+    /*do{
+        a++;
+        printf("Ingresa un numero: ");
+        scanf("%d", &d);
+    }while (a<10);*/
+    a=0;
+    if (a==1){
+        printf("Hola");
+    } else {
+        printf("Adios");
+    }
     //Requerimiento 5.- Levanta una excepcion en el scanf si la captura no es un numero
     /*printf("Introduce la altura de la piramide: ");
     scanf("altura", &altura);

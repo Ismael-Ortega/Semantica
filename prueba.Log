@@ -1,6 +1,20 @@
 Archivo: prueba.cpp
-07/11/2022 01:46:25 p. m.
+08/11/2022 12:50:29 p. m.
 
-ab = 200 = 200
-
-ab = 2 Error de semantica: el valor sobrepasa el limite en linea  12
+a = 0 = 0
+a 1 
+variables: 
+area Float 0
+radio Float 0
+pi Float 0
+resultado Float 0
+a Int 0
+d Int 0
+altura Int 0
+cinco Int 0
+x Float 0
+y Char 0
+i Int 0
+j Int 0
+k Int 0
+ab Char 0

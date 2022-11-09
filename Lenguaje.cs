@@ -12,11 +12,12 @@ using System.Collections.Generic;
 //                                  a) Marcar errores semanticos cuando los incrementos de termino o incrementos de factor
 //                                     Superen el rango de la variable LISTO
 //                                  b) Considerar el inciso b) y c) para el for LISTO
-//                                  c) Hacer que funcione el do() y el while()
+//                                  c) Hacer que funcione el do() y el while() LISTO
 //Requerimiento 3.-
-//                                  a) Considerar las variables y los casteos de las expresiones matematicas en ensamblador
+//                                  a) Considerar las variables y los casteos de las expresiones matematicas en ensamblador LISTO?  
 //                                  b) Considerar el residuo de la division en el ensamblador
-//                                  c) Programar el Printf y el Scanf en ensamblador
+//                                  c) Programar el Printf y el Scanf en ensamblador LISTO?
+//                                     Verificar el caso de los printf y printn
 //Requerimiento 4.-                 
 //                                  a) Programar el else en ensamblador
 //                                  b) Programar el for en ensamblador
@@ -241,6 +242,7 @@ namespace semantica
             if (getContenido() == "printf")
             {
                 Printf(evaluacion);
+                //wasm.WriteLine("\tCALL PRINTF");
             }
             else if (getContenido() == "scanf")
             {
@@ -351,6 +353,11 @@ namespace semantica
         //While -> while(Condicion) bloque de instrucciones | instruccion
         private void While(bool evaluacion)
         {
+            float resIncremento = 0;
+            int posicionAux = posicion;
+            int lineaAux = linea;
+            int tamañoAux = getContenido().Length;
+            string contenidoAux = getContenido();
             match("while");
             match("(");
             bool ValidarWhile = Condicion("");
@@ -367,11 +374,24 @@ namespace semantica
             {
                 Instruccion(ValidarWhile);
             }
+            if (ValidarWhile == true)
+            {
+                modVariable(contenidoAux, resIncremento);
+                posicion = posicionAux - tamañoAux;
+                linea = lineaAux;
+                setPosicion(posicion);
+                NextToken();
+            }
         }
 
         //Do -> do bloque de instrucciones | intruccion while(Condicion)
         private void Do(bool evaluacion)
         {
+            float resIncremento = 0;
+            int posicionAux = posicion;
+            int lineaAux = linea;
+            int tamañoAux = getContenido().Length;
+            string contenidoAux = getContenido();
             bool validarDo = true;
             if (evaluacion == false)
             {
@@ -391,6 +411,14 @@ namespace semantica
             validarDo = Condicion("");
             match(")");
             match(";");
+            if (validarDo == true)
+            {
+                modVariable(contenidoAux, resIncremento);
+                posicion = posicionAux - tamañoAux;
+                linea = lineaAux;
+                setPosicion(posicion);
+                NextToken();
+            }
         }
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Intruccion 
         private void For(bool evaluacion)
@@ -417,7 +445,7 @@ namespace semantica
                 }
                 match(";");
                 //Requerimiento 2 a)
-                //Realizar un switch case para validar si supera el rango permitido de int, float, char?
+                //Realizar un switch case para validar si supera el rango permitido de int, float, char
                 match(Tipos.Identificador);
                 resIncremento = Incremento(validarFor, contenidoAux);
                 match(")");
@@ -631,6 +659,7 @@ namespace semantica
         private void If(bool evaluacion)
         {
             string etiquetaIf = "if" + ++cIf;
+            string finIf = "else" + cIf;
             match("if");
             match("(");
             bool validarIf = Condicion(etiquetaIf);
@@ -638,7 +667,7 @@ namespace semantica
             {
                 validarIf = false;
             }
-            match(")");
+               match(")");
             if (getContenido() == "{")
             {
                 BloqueInstrucciones(validarIf);
@@ -647,9 +676,14 @@ namespace semantica
             {
                 Instruccion(validarIf);
             }
+            /*if (avaluaASM){
+                asm.WriteLine("JMP " + finIf);
+                asm.WriteLine(etiquetaIf + ":");
+            }*/
             if (getContenido() == "else")
             {
                 match("else");
+                asm.WriteLine(etiquetaIf + ":");
                 if (getContenido() == "{")
                 {
                     if (evaluacion == true)
@@ -878,6 +912,7 @@ namespace semantica
                     {
                         case "char":
                             casteo = Variable.TipoDato.Char;
+                            asm.WriteLine("MOV AH 0");
                             break;
                         case "int":
                             casteo = Variable.TipoDato.Int;
@@ -897,6 +932,7 @@ namespace semantica
                     dominante = casteo;
                     float valorGuardado = stack.Pop();
                     asm.WriteLine("POP AX");
+                    //asm.WriteLine("MOV AH 0");
                     valorGuardado = Convertir(valorGuardado, dominante);
                     stack.Push(valorGuardado);
                 }
