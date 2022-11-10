@@ -1,8 +1,8 @@
 Archivo: prueba.cpp
-08/11/2022 12:50:29 p. m.
+09/11/2022 08:23:21 a. m.
 
-a = 0 = 0
-a 1 
+ab = 257 = 1
+ab 
 variables: 
 area Float 0
 radio Float 0
@@ -17,4 +17,4 @@ y Char 0
 i Int 0
 j Int 0
 k Int 0
-ab Char 0
+ab Char 1

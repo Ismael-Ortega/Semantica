@@ -351,7 +351,7 @@ namespace semantica
         }
 
         //While -> while(Condicion) bloque de instrucciones | instruccion
-        private void While(bool evaluacion)
+        private void While(bool evaluacion)//, evaluaASM
         {
             float resIncremento = 0;
             int posicionAux = posicion;
@@ -385,7 +385,7 @@ namespace semantica
         }
 
         //Do -> do bloque de instrucciones | intruccion while(Condicion)
-        private void Do(bool evaluacion)
+        private void Do(bool evaluacion)//, evaluaASM
         {
             float resIncremento = 0;
             int posicionAux = posicion;
@@ -421,9 +421,8 @@ namespace semantica
             }
         }
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Intruccion 
-        private void For(bool evaluacion)
+        private void For(bool evaluacion)//, evaluaASM
         {
-
             float resIncremento = 0;
             string etiquetaInicioFor = "inicioFor" + cFor;
             string etiquetaFinFor = "finFor" + ++cFor;
@@ -656,7 +655,7 @@ namespace semantica
         }
 
         //If -> if(Condicion) bloque de instrucciones (else bloque de instrucciones)?
-        private void If(bool evaluacion)
+        private void If(bool evaluacion)//, evaluaASM
         {
             string etiquetaIf = "if" + ++cIf;
             string finIf = "else" + cIf;
@@ -676,7 +675,7 @@ namespace semantica
             {
                 Instruccion(validarIf);
             }
-            /*if (avaluaASM){
+            /*if (evaluaASM){
                 asm.WriteLine("JMP " + finIf);
                 asm.WriteLine(etiquetaIf + ":");
             }*/
@@ -912,7 +911,7 @@ namespace semantica
                     {
                         case "char":
                             casteo = Variable.TipoDato.Char;
-                            asm.WriteLine("MOV AH 0");
+                            asm.WriteLine("MOV AH, 0");
                             break;
                         case "int":
                             casteo = Variable.TipoDato.Int;
