@@ -14,8 +14,12 @@ void main(){
         printf("Ingresa un numero: ");
         scanf("%d", &d);
     }while (a<10);*/
-    ab=(char)(257);
-    printf(ab);
+    if (1==1){
+        printf("Hola");
+    }
+    else{
+        printf("Adios");
+    }
     //Requerimiento 5.- Levanta una excepcion en el scanf si la captura no es un numero
     /*printf("Introduce la altura de la piramide: ");
     scanf("altura", &altura);
