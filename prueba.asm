@@ -1,5 +1,5 @@
 ;Archivo: prueba.asm
-;Fecha: 10/11/2022 08:59:54 a. m.
+;Fecha: 10/11/2022 06:49:03 p. m.
 #make_COM#
 include 'emu8086.inc'
 ORG 100H
@@ -18,19 +18,18 @@ ORG 100H
 	j  DW ?
 	k  DW ?
 	ab  DW ?
-MOV AX, 1
+MOV AX, i
 PUSH AX
-MOV AX, 1
+MOV AX, 3
+PUSH AX
+POP BX
+POP AX
+CMP AX, BX
+JGE 
+MOV AX, i
 PUSH AX
 POP AX
-POP BX
-CMP AX, BX
-JNE if1
-PRINTN "Hola"
-JMP else1
-if1:
-PRINTN "Adios"
-else1:
+CALL PRINT_NUM
 RET
 DEFINE_PRINT_NUM
 DEFINE_PRINT_NUM_UNS

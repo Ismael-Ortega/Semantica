@@ -1,6 +1,10 @@
 Archivo: prueba.cpp
-10/11/2022 08:59:54 a. m.
-1 1 
+10/11/2022 06:49:03 p. m.
+i 3 i 
+i = i 3 i 
+i = i 3 i 
+i = i 3 i 
+i = 
 variables: 
 area Float 0
 radio Float 0
@@ -12,7 +16,7 @@ altura Int 0
 cinco Int 0
 x Float 0
 y Char 0
-i Int 0
+i Int 3
 j Int 0
 k Int 0
 ab Char 0
